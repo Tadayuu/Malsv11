@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Adaptive Learning System (MALS) v12.0</title>
+    <title>Math Adaptive Learning System (MALS) v12.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -30,8 +30,10 @@
         .gate-half-modal {
             transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.32, 0.94, 0.6, 1);
+            pointer-events: none; /* 閉じている間は万一の位置ズレでもクリックを吸収しないようにする */
+            padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important; /* iPhoneのホームインジケーターと重ならないようにする（Tailwindのp-8指定より優先させる） */
         }
-        .gate-half-modal.open { transform: translateY(0); }
+        .gate-half-modal.open { transform: translateY(0); pointer-events: auto; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);">
@@ -114,11 +116,11 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">ニックネーム</label>
+                        <label for="gate-reg-nickname" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">ニックネーム</label>
                         <input type="text" id="gate-reg-nickname" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-emerald-500" placeholder="例: たろう">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">パスコード（数字4桁）</label>
+                        <label for="gate-reg-passcode" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">パスコード（数字4桁）</label>
                         <input type="text" id="gate-reg-passcode" inputmode="numeric" pattern="[0-9]*" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-emerald-500" placeholder="••••" maxlength="4">
                     </div>
                     <button onclick="registerStudentFromGate()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md">
@@ -183,15 +185,15 @@
             <hr class="border-slate-100">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">リカバリーワード</label>
+                    <label for="gate-recovery-word-input" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">リカバリーワード</label>
                     <input type="text" id="gate-recovery-word-input" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-amber-500" placeholder="初回設定時に決めた合言葉">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">新しいアクセスコード（数字4桁）</label>
+                    <label for="gate-recovery-new-pass1" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">新しいアクセスコード（数字4桁）</label>
                     <input type="text" id="gate-recovery-new-pass1" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold tracking-widest font-mono focus:outline-none focus:border-amber-500" placeholder="••••">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">確認のため再入力</label>
+                    <label for="gate-recovery-new-pass2" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">確認のため再入力</label>
                     <input type="text" id="gate-recovery-new-pass2" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold tracking-widest font-mono focus:outline-none focus:border-amber-500" placeholder="••••">
                 </div>
             </div>
@@ -235,14 +237,14 @@
     <div id="mals-app-root" class="hidden min-h-screen flex flex-col">
 
     <header id="app-header" class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-2 gap-y-2">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100 shrink-0">
                     <i class="fa-solid fa-graduation-cap text-lg"></i>
                 </div>
-                <div>
+                <div class="min-w-0">
                     <h1 class="text-base font-bold text-slate-900 tracking-tight">MALS</h1>
-                    <p class="text-[10px] text-slate-400 font-medium">Math Adaptive Learning System v12.0（多端末データ共有対応版）</p>
+                    <p class="hidden sm:block text-[10px] text-slate-400 font-medium truncate">Math Adaptive Learning System v12.2（単元完了選択画面対応版）</p>
                 </div>
             </div>
             
@@ -800,7 +802,7 @@
 
     <footer class="bg-white border-t border-slate-200 mt-12 py-4">
         <div class="max-w-7xl mx-auto px-4 text-center text-[10px] text-slate-400 font-medium">
-            &copy; Math Adaptive Learning System (MALS) - v12.0：Firebase設定の折りたたみ表示／配布用HTML書き出し機能で多端末データ共有に対応
+            &copy; Math Adaptive Learning System (MALS) - v12.2：単元内の問題を一巡すると「もう一度」／「別の単元を学習する」の選択画面を表示
         </div>
     </footer>
 
@@ -833,6 +835,7 @@
 
         let currentStudent = null;
         let currentUnitCategory = null;
+        let seenProblemIdsInUnit = new Set(); // 現在の単元セッションで既に出題した問題IDの記録（一巡判定用）
         let currentActiveProblem = null;
         let currentQuestionStartedAt = null; // フェーズ2：解答スピード計測用
 
@@ -1491,6 +1494,14 @@
             });
             document.getElementById(targetId).classList.remove('hidden');
 
+            // 【PCでクリックが効かなくなるバグの修正】
+            // ハーフモーダル（パスコード入力オーバーレイ）を開いたまま別の画面へ切り替えると、
+            // 画面全体を覆う透明なオーバーレイ(#gate-modal-overlay)が非表示に戻らず残り続け、
+            // それ以降すべてのクリックを吸収してしまっていた（Tabキーでのフォーカス移動は
+            // オーバーレイの影響を受けないため、そちらは正常に動作していた）。
+            // 画面を切り替えるたびに必ず閉じることで、この状態が残らないようにする。
+            closeGateHalfModal();
+
             if (targetId === 'gate-student-view') {
                 renderGateClassSelector();
                 renderGateStudentList();
@@ -1664,15 +1675,15 @@
                 subtitle.innerText = "初回設定：教員用アクセスコード（数字4桁）とリカバリーワードを作成してください。";
                 body.innerHTML = `
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">新しいアクセスコード（数字4桁）</label>
+                        <label for="gate-teacher-setup-pass1" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">新しいアクセスコード（数字4桁）</label>
                         <input type="text" id="gate-teacher-setup-pass1" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold tracking-widest font-mono focus:outline-none focus:border-indigo-500" placeholder="••••">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">確認のため再入力</label>
+                        <label for="gate-teacher-setup-pass2" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">確認のため再入力</label>
                         <input type="text" id="gate-teacher-setup-pass2" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold tracking-widest font-mono focus:outline-none focus:border-indigo-500" placeholder="••••">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">リカバリーワード（パスコードを忘れた際に使用・忘れないようメモしてください）</label>
+                        <label for="gate-teacher-setup-recovery" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">リカバリーワード（パスコードを忘れた際に使用・忘れないようメモしてください）</label>
                         <input type="text" id="gate-teacher-setup-recovery" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500" placeholder="例：好きな合言葉">
                     </div>
                 `;
@@ -1682,7 +1693,7 @@
                 subtitle.innerText = "管理者用アクセスコードを入力してください。";
                 body.innerHTML = `
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">教員用パスコード</label>
+                        <label for="gate-teacher-login-pass" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">教員用パスコード</label>
                         <input type="text" id="gate-teacher-login-pass" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold tracking-widest font-mono focus:outline-none focus:border-indigo-500" placeholder="••••">
                     </div>
                 `;
@@ -2959,6 +2970,7 @@
             if(!categories[catId] || categories[catId].archived) return;
             if(!currentStudent && currentUserRole !== 'teacher') return; // 教員プレビュー以外、未ログインでは選択不可
             currentUnitCategory = categories[catId];
+            seenProblemIdsInUnit = new Set(); // 新しい単元を選んだら「一度解いた問題」の記録をリセットする
             
             document.getElementById('problem-empty-placeholder').classList.add('hidden');
             document.getElementById('student-stage-play').classList.remove('hidden');
@@ -2974,6 +2986,10 @@
             if (currentStudent) renderMasteryHistoryPanel();
         }
 
+        // ============================================================
+        // 単元内の問題を一巡したら、ランダムに無限ループさせるのではなく
+        // 「もう一度」／「別の単元を学習する」の選択画面を表示する
+        // ============================================================
         function renderAdaptiveProblem() {
             const renderZone = document.getElementById('student-question-render-zone');
             const choicesContainer = document.getElementById('student-choices-container');
@@ -2983,30 +2999,37 @@
             const key = isPreview ? null : `${currentStudent.id}_${currentUnitCategory.id}`;
             const prog = isPreview ? { currentLevel: 1, masteryScore: null } : (progress[key] || makeDefaultProgress());
             
-            levelIndicator.innerText = isPreview ? "プレビュー" : `Level ${prog.currentLevel}`;
             updateMasteryScoreBar(prog.masteryScore);
 
-            // プレビュー時はレベルを問わず、その単元の全問題からランダム抽出する
-            let pool = isPreview
-                ? Object.values(problems).filter(p => p.categoryId === currentUnitCategory.id)
-                : Object.values(problems).filter(p => p.categoryId === currentUnitCategory.id && p.level === prog.currentLevel);
-
-            if (pool.length === 0) {
-                let backupPool = Object.values(problems).filter(p => p.categoryId === currentUnitCategory.id);
-                if(backupPool.length === 0) {
-                    renderZone.innerHTML = `
-                        <div class="w-full text-center py-4 space-y-1">
-                            <h4 class="text-xs font-bold text-slate-500">問題が登録されていません</h4>
-                            <p class="text-[11px] text-slate-400">管理画面の「アダプティブ問題エディタ」から、この小単元（${currentUnitCategory.name}）の問題を登録してください。</p>
-                        </div>
-                    `;
-                    choicesContainer.innerHTML = "";
-                    return;
-                }
-                currentActiveProblem = backupPool[Math.floor(Math.random() * backupPool.length)];
-            } else {
-                currentActiveProblem = pool[Math.floor(Math.random() * pool.length)];
+            const totalUnitPool = Object.values(problems).filter(p => p.categoryId === currentUnitCategory.id);
+            if (totalUnitPool.length === 0) {
+                levelIndicator.innerText = isPreview ? "プレビュー" : `Level ${prog.currentLevel}`;
+                renderZone.innerHTML = `
+                    <div class="w-full text-center py-4 space-y-1">
+                        <h4 class="text-xs font-bold text-slate-500">問題が登録されていません</h4>
+                        <p class="text-[11px] text-slate-400">管理画面の「アダプティブ問題エディタ」から、この小単元（${currentUnitCategory.name}）の問題を登録してください。</p>
+                    </div>
+                `;
+                choicesContainer.innerHTML = "";
+                return;
             }
+
+            // プレビュー時はレベルを問わず全問題、生徒本人は現在のレベルの問題を優先して抽出する
+            const levelPool = isPreview ? totalUnitPool : totalUnitPool.filter(p => p.level === prog.currentLevel);
+            const candidatePool = levelPool.length > 0 ? levelPool : totalUnitPool; // そのレベルに問題が無ければ単元全体から補う
+
+            const unseenPool = candidatePool.filter(p => !seenProblemIdsInUnit.has(p.id));
+
+            if (unseenPool.length === 0) {
+                // 候補プール内の問題をすべて一度ずつ出題し終えた → 完了画面を表示する
+                levelIndicator.innerText = "完了";
+                renderUnitCompletionScreen(renderZone, choicesContainer);
+                return;
+            }
+
+            levelIndicator.innerText = isPreview ? "プレビュー" : `Level ${prog.currentLevel}`;
+            currentActiveProblem = unseenPool[Math.floor(Math.random() * unseenPool.length)];
+            seenProblemIdsInUnit.add(currentActiveProblem.id);
 
             renderZone.innerHTML = `<div>${currentActiveProblem.question}</div>`;
 
@@ -3016,6 +3039,44 @@
             currentQuestionStartedAt = Date.now();
 
             triggerMathRendering();
+        }
+
+        // 単元内の候補問題をすべて一度ずつ出題し終えたときに表示する完了画面
+        function renderUnitCompletionScreen(renderZone, choicesContainer) {
+            hideImmediateFeedbackBanner();
+
+            renderZone.innerHTML = `
+                <div class="w-full text-center py-6 space-y-2">
+                    <div class="text-emerald-400 text-4xl"><i class="fa-solid fa-circle-check"></i></div>
+                    <h4 class="text-sm font-bold text-slate-700">この単元の問題を一通り解き終えました！</h4>
+                    <p class="text-[11px] text-slate-400">登録されている問題に、少なくとも一度は挑戦しました。続けるか、他の単元に進みましょう。</p>
+                </div>
+            `;
+            choicesContainer.innerHTML = `
+                <button onclick="retryCurrentUnit()" class="w-full p-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i>もう一度解く
+                </button>
+                <button onclick="exitToUnitSelector()" class="w-full p-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-list"></i>別の単元を学習する
+                </button>
+            `;
+            triggerMathRendering();
+        }
+
+        // 「もう一度解く」：既出記録だけをリセットして同じ単元を再スタートする
+        function retryCurrentUnit() {
+            seenProblemIdsInUnit = new Set();
+            renderAdaptiveProblem();
+        }
+
+        // 「別の単元を学習する」：単元選択画面に戻る
+        function exitToUnitSelector() {
+            currentUnitCategory = null;
+            currentActiveProblem = null;
+            document.getElementById('student-stage-play').classList.add('hidden');
+            document.getElementById('student-history-panel').classList.add('hidden');
+            document.getElementById('problem-empty-placeholder').classList.remove('hidden');
+            renderStudentUnitSelector();
         }
 
         // ============================================================
@@ -3042,7 +3103,7 @@
             } else if (type === 'drawing') {
                 choicesContainer.innerHTML = `
                     <div class="sm:col-span-2 space-y-2">
-                        <canvas id="drawing-canvas" width="500" height="220" class="w-full bg-white border border-slate-300 rounded-xl touch-none" style="cursor:crosshair;"></canvas>
+                        <canvas id="drawing-canvas" width="500" height="220" class="w-full bg-white border border-slate-300 rounded-xl touch-none block" style="cursor:crosshair; aspect-ratio: 500 / 220; height: auto;"></canvas>
                         <div class="flex items-center justify-between gap-2">
                             <button onclick="clearDrawingCanvas()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg text-[11px] transition-all"><i class="fa-solid fa-eraser mr-1"></i>消す</button>
                             <button onclick="revealDrawingAnswer()" class="student-choice-btn px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow-sm transition-all">描き終えたら模範解答を見る</button>
